@@ -1,5 +1,3 @@
-com/geekscord/SplashActivity.java
- com.geekscord.SplashActivity
 com/geekscord/MainApplication.java
  com.geekscord.MainApplication
  com.geekscord.MainApplication$1
