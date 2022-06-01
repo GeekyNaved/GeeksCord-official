@@ -12,7 +12,6 @@ import {
   ScrollView,
 } from 'react-native';
 import {List, Card} from 'react-native-paper';
-// import {ScrollView} from 'react-native-gesture-handler';
 // import {AdMobBanner} from 'expo-ads-admob';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import AnimatedLottieView from 'lottie-react-native';
