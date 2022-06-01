@@ -1,0 +1,11 @@
+com/geekscord/SplashActivity.java
+ com.geekscord.SplashActivity
+com/geekscord/MainApplication.java
+ com.geekscord.MainApplication
+ com.geekscord.MainApplication$1
+com/geekscord/BuildConfig.java
+ com.geekscord.BuildConfig
+com/geekscord/MainActivity.java
+ com.geekscord.MainActivity
+com/facebook/react/PackageList.java
+ com.facebook.react.PackageList
