@@ -4,22 +4,21 @@ import {
   FlatList,
   StatusBar,
   View,
-  LogBox,
-  ScrollView,
+  TouchableOpacity,
+  Text
 } from 'react-native';
-import {List, Card, Searchbar} from 'react-native-paper';
-// import {ScrollView} from 'react-native-gesture-handler';
-// import {AdMobBanner} from 'expo-ads-admob';
+import {Searchbar} from 'react-native-paper';
 import {SafeAreaView} from 'react-native-safe-area-context';
-// import {AntDesign} from '@expo/vector-icons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 export default function SearchScreen({route, navigation}) {
   const course = route.params;
   const [filterData, setfilterData] = useState('');
   const [masterData, setMasterData] = useState('');
   const [search, setSearch] = useState('');
   useEffect(() => {
-    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    // LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     filterCourseData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -29,22 +28,21 @@ export default function SearchScreen({route, navigation}) {
   }
   const ItemView = ({item}) => {
     return (
-      <Card
-        key={item.id}
-        style={styles.courseCard}
-        onPress={() => {
-          navigation.navigate('LinksScreen', {
-            hindi: `${item.link1}`,
-            english: `${item.link2}`,
-          });
-        }}>
-        <List.Item
-          title={item.title}
-          right={props => (
-            <List.Icon {...props} icon="forward" color="#6200ee" />
-          )}
-        />
-      </Card>
+      <TouchableOpacity
+      activeOpacity={1}
+      key={item.id}
+      style={styles.courseCard}
+      onPress={() => {
+            navigation.navigate('LinksScreen', {
+              hindi: `${item.link1}`,
+              english: `${item.link2}`,
+            });
+          }}>
+    <View style={styles.cardContainer}>
+      <Text style={styles.cardTitle}>{item.title}</Text>
+      <Icon name="forward" size={20} color="#6200ee"  />
+    </View>
+  </TouchableOpacity>
     );
   };
   const searchFilter = text => {
@@ -67,11 +65,11 @@ export default function SearchScreen({route, navigation}) {
   return (
     <SafeAreaView style={{flex: 1}}>
       <StatusBar />
-      <ScrollView>
+      {/* <ScrollView> */}
         <View style={styles.header}>
           <AntDesign
             name="arrowleft"
-            size={28}
+            size={26}
             color="white"
             onPress={() => navigation.goBack()}
           />
@@ -87,7 +85,7 @@ export default function SearchScreen({route, navigation}) {
           keyExtractor={item => item.id}
           renderItem={ItemView}
         />
-      </ScrollView>
+      {/* </ScrollView> */}
       {/* <AdMobBanner
                 style={styles.bottomAdBanner}
                 bannerSize="fullBanner"
@@ -100,13 +98,22 @@ export default function SearchScreen({route, navigation}) {
 
 const styles = StyleSheet.create({
   courseCard: {
-    marginTop: 20,
+    marginTop: 15,
     marginBottom: 10,
     marginHorizontal: 25,
-    padding: 25,
-    backgroundColor: '#fff',
-    color: '#fff',
-    elevation: 4,
+    padding: 30,
+    backgroundColor: '#FFFDFA',
+    elevation: 8,
+  },
+  cardContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: '#3e3f3d'
   },
   header: {
     backgroundColor: '#6200ee',

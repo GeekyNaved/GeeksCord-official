@@ -1,29 +1,31 @@
 import * as React from 'react';
-import {View, Linking, StyleSheet} from 'react-native';
-import {List, Card} from 'react-native-paper';
-import {AdMobBanner} from 'expo-ads-admob';
+import {View, Linking, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'
 export default function LinksScreen({route}) {
   const {hindi, english} = route.params;
   return (
     <View style={{flex: 1, justifyContent: 'center'}}>
-      <Card style={styles.ansBtn} onPress={() => Linking.openURL(hindi)}>
-        <List.Item
-          title="Hindi Resource"
-          right={props => (
-            <List.Icon {...props} icon="forward" color="#6200ee" />
-          )}
-        />
-      </Card>
-      <Card style={styles.ansBtn} onPress={() => Linking.openURL(english)}>
-        <List.Item
-          title="English Resource"
-          right={props => (
-            <List.Icon {...props} icon="forward" color="#6200ee" />
-          )}
-        />
-      </Card>
+    <TouchableOpacity
+      activeOpacity={1}
+      style={styles.courseCard}
+      onPress={() => Linking.openURL(hindi) }>
+    <View style={styles.cardContainer}>
+      <Text style={styles.cardTitle}>Course in Hindi</Text>
+      <Icon name="forward" size={20} color="#6200ee"  />
+    </View>
+  </TouchableOpacity>
+  
+  <TouchableOpacity
+      activeOpacity={1}
+      style={styles.courseCard}
+      onPress={() => Linking.openURL(english) }>
+    <View style={styles.cardContainer}>
+      <Text style={styles.cardTitle}>Course in English</Text>
+      <Icon name="forward" size={20} color="#6200ee"  />
+    </View>
+  </TouchableOpacity>
 
-      {/* <AdMobBanner
+    {/* <AdMobBanner
         style={styles.bottomBanner}
         bannerSize="fullBanner"
         adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
@@ -43,8 +45,26 @@ const styles = StyleSheet.create({
     color: '#fff',
     elevation: 4,
   },
-  bottomBanner: {
-    position: 'absolute',
-    bottom: 0,
+  courseCard: {
+    marginTop: 15,
+    marginBottom: 10,
+    marginHorizontal: 25,
+    padding: 30,
+    backgroundColor: '#FFFDFA',
+    elevation: 8,
   },
+  cardContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: '#3e3f3d'
+  },
+  // bottomBanner: {
+  //   position: 'absolute',
+  //   bottom: 0,
+  // },
 });
