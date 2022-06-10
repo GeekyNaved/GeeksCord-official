@@ -1,40 +1,17 @@
-import React, {useEffect} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from './component/HomeScreen.js';
-import LinksScreen from './component/LinksScreen.js';
-import SearchScreen from './component/SearchScreen.js';
-import SplashScreen from 'react-native-splash-screen';
-
-const Stack = createNativeStackNavigator();
+import React, { useEffect, useState } from 'react';
+import HomeStack from './routes/HomeStack.js';
+import SplashScreen from './screens/SplashScreen.js';
 
 const App = () => {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="SearchScreen"
-          component={SearchScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="LinksScreen"
-          component={LinksScreen}
-          options={{
-            title: 'Links',
-            headerStyle: {
-              backgroundColor: '#6200ee',
-            },
-            headerTintColor: 'white',
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+  const [isVisible, setVisible] = useState(true);
+  useEffect(() => {
+    const Timeout = setTimeout(() => {
+      setVisible(false);
+    }, 3000);
+
+    return () => clearTimeout(Timeout);
+  });
+
+  return isVisible ? <SplashScreen /> : <HomeStack />
 };
 export default App;
