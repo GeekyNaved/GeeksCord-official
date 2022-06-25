@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7
   },
   searchContainer: {
-    flex: .68,
+    // flex: .68,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
