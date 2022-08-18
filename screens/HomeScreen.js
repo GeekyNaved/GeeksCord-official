@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -8,97 +8,100 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AnimatedLottieView from 'lottie-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import NetInfo from "@react-native-community/netinfo";
+import { NoInternetModal } from '../components/noInternetModal';
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
   const [course, setCourse] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isOffline, setOfflineStatus] = useState(false);
 
   useEffect(() => {
-    // LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    NetInfo.addEventListener((state) => {
+      const offline = !(state.isConnected && state.isInternetReachable);
+      console.log('offline', offline)
+      setOfflineStatus(offline);
+    });
+
     fetchCourse();
-  }, []);
-  async function fetchCourse() {
+  }, [fetchCourse]);
+
+  const fetchCourse = useCallback(async () => {
     const response = await fetch(`https://geekynaved.github.io/GeeksCord-api/`);
     response.json().then(data => {
-        setCourse(data);
-        setLoading(false);
-      })
+      setCourse(data);
+      setLoading(false);
+      isOffline && setOfflineStatus(false);
+    })
       .catch(error => {
-        // console.log(course)
-        if(course == '') 
-        {
+        if (course == '') {
           alert('something went wrong. Please Restart the app');
         }
         console.log('error', error);
-    })
-        
-  }
-  const ItemView = ({item}) => {
+      })
+  }, [isOffline])
+
+  const ItemView = ({ item }) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
         key={item.id}
         style={styles.courseCard}
         onPress={() => {
-              navigation.navigate('LinksScreen', {
-                hindi: `${item.link1}`,
-                english: `${item.link2}`,
-              });
-            }}>
-      <View style={styles.cardContainer}>
-        <Text style={styles.cardTitle}>{item.title}</Text>
-        <Icon name="forward" size={20} color="#6200ee"  />
-      </View>
-    </TouchableOpacity>
+          navigation.navigate('LinksScreen', {
+            hindi: `${item.link1}`,
+            english: `${item.link2}`,
+          });
+        }}>
+        <View style={styles.cardContainer}>
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          <Icon name="forward" size={20} color="#6200ee" />
+        </View>
+      </TouchableOpacity>
     );
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#6200ee" />
-      {/* Add this in scrollview when you are placing ads
-      style={{ marginBottom: 60 }} */}
-      {/* <ScrollView> */}
-        <View style={styles.header}>
-          <Text style={styles.appName}>Geeks Cord</Text>
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.searchContainer}
-            onPress={() => navigation.navigate('SearchScreen', course)}>
-          {/* <View style={styles.searchContainer}> */}
-              <Icon name="search" size={18} color="grey"/>
-              <Text style={styles.searchBar}>
-                search courses...
-              </Text>
-            {/* </View> */}
-          </TouchableOpacity>
-        </View>
+      <View style={styles.header}>
+        <Text style={styles.appName}>Geeks Cord</Text>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.searchContainer}
+          onPress={() => navigation.navigate('SearchScreen', course)}>
+          <Icon name="search" size={18} color="grey" />
+          <Text style={styles.searchBar}>
+            search courses...
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-        {loading ? (
-          <AnimatedLottieView
-            source={require('../assets/32527-blue-cycle.json')}
-            style={styles.animatedLoader}
-            autoPlay
-            loop
-          />
-        ) : (
-          <FlatList
-            data={course}
-            keyExtractor={item => item.id}
-            renderItem={ItemView}
-          />
-        )}
-      {/* </ScrollView> */}
-      {/* for Ad */}
-      {/* <AdMobBanner
-        style={styles.bottomAdBanner}
-        bannerSize="fullBanner"
-        adUnitID="ca-app-pub-3940256099942544/6300978111" // Test ID, Replace with your-admob-unit-id
-        servePersonalizedAds // true or false
-      /> */}
+      {loading ? (
+        <AnimatedLottieView
+          source={require('../assets/32527-blue-cycle.json')}
+          style={styles.animatedLoader}
+          autoPlay
+          loop
+        />
+      ) : (
+        <FlatList
+          data={course}
+          keyExtractor={item => item.id}
+          renderItem={ItemView}
+        />
+      )}
+      {/* <---------modal for show internet offline --------->*/}
+      {isOffline &&
+        <NoInternetModal
+          show={!isOffline}
+          onRetry={fetchCourse}
+        />
+      }
+
     </SafeAreaView>
   );
 }
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFDFA',
     elevation: 8,
   },
-  cardContainer:{
+  cardContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -158,9 +161,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 10,
     paddingBottom: 10,
-  },  
-  // bottomAdBanner: {
-    //   position: 'absolute',
-  //   bottom: 0,
-  // },
+  },
 });
