@@ -31,10 +31,8 @@ export default function HomeScreen({ navigation }) {
   }, [isOffline]);
 
   const fetchCourse = useCallback(async () => {
-    console.log('cheCk===>')
     setLoading(true);
     const response = await fetch(`https://geekynaved.github.io/GeeksCord-api/`);
-    console.log('data====>re', response)
     response.json().then(data => {
       setCourse(data);
       // setLoading(false);
