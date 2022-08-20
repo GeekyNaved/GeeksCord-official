@@ -20,28 +20,35 @@ export default function HomeScreen({ navigation }) {
   const [isOffline, setOfflineStatus] = useState(false);
 
   useEffect(() => {
-    NetInfo.addEventListener((state) => {
+    const removeNetInfoSubscription =  NetInfo.addEventListener((state) => {
       const offline = !(state.isConnected && state.isInternetReachable);
       console.log('offline', offline)
       setOfflineStatus(offline);
     });
 
     fetchCourse();
-  }, [fetchCourse]);
+    return () => removeNetInfoSubscription();
+  }, [isOffline]);
 
   const fetchCourse = useCallback(async () => {
+    console.log('cheCk===>')
+    setLoading(true);
     const response = await fetch(`https://geekynaved.github.io/GeeksCord-api/`);
+    console.log('data====>re', response)
     response.json().then(data => {
       setCourse(data);
-      setLoading(false);
-      isOffline && setOfflineStatus(false);
+      // setLoading(false);
+      // isOffline && setOfflineStatus(false);
     })
-      .catch(error => {
-        if (course == '') {
-          alert('something went wrong. Please Restart the app');
-        }
-        console.log('error', error);
-      })
+    // .catch(error => {
+    //   if (course == '') {
+    //     alert('something went wrong. Please Restart the app');
+    //   }
+    //   console.log('error', error);
+    // })
+    .finally(() => {
+      setLoading(false);
+    })
   }, [isOffline])
 
   const ItemView = ({ item }) => {
