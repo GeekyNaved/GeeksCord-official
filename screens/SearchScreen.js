@@ -45,6 +45,15 @@ export default function SearchScreen({route, navigation}) {
   </TouchableOpacity>
     );
   };
+
+  const EmptyView = () => {
+   return(
+    <View style={styles.emptyContainer}>
+      <Text style={styles.cardTitle}>No Results found</Text>
+    </View>
+   )
+  };
+  
   const searchFilter = text => {
     if (text) {
       const newData = masterData.filter(item => {
@@ -84,6 +93,7 @@ export default function SearchScreen({route, navigation}) {
           data={filterData}
           keyExtractor={item => item.id}
           renderItem={ItemView}
+          ListEmptyComponent={EmptyView}
         />
       {/* </ScrollView> */}
       {/* <AdMobBanner
@@ -127,6 +137,11 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 35,
   },
+  emptyContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20,
+  },  
   bottomAdBanner: {
     position: 'absolute',
     bottom: 0,
